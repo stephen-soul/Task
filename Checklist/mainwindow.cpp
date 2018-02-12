@@ -6,7 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // Set fixed size of the main menu to 750x500
     this->setFixedSize(QSize(750, 500));
+    // Set the background image
     QPixmap bkgnd("images/logoWithText.png");
         bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
         QPalette palette;
@@ -17,4 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_newPushButton_clicked()
+{
+    listWindow->show();
+    this->hide();
 }
