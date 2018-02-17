@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedSize(QSize(750, 500));
     // Start with the save button disabled because you can't save on the main menu
     ui->actionSave->setEnabled(false);
-    ui->listWidget->clearFocus();
-    ui->listWidget->item(1)->setTextAlignment(Qt::AlignHCenter);
+    // Set the list widget item 0 (the example) to be center aligned
+    ui->listWidget->item(0)->setTextAlignment(Qt::AlignHCenter);
 }
 
 MainWindow::~MainWindow() {
@@ -45,8 +45,21 @@ void MainWindow::on_actionNewMenu_triggered() {
 
 void MainWindow::on_listWidget_currentRowChanged(int currentRow)
 {
-    // On the current row change, get the current row and set the font to strike out like you would an actual checklist
-    QFont font;
-    font.setStrikeOut(true);
-    ui->listWidget->item(currentRow)->setFont(font);
+    if(ui->listWidget->currentRow() >= 0) {
+        // On the current row change, get the current row and set the font to strike out like you would an actual checklist
+        QFont font;
+        font.setStrikeOut(true);
+        ui->listWidget->item(currentRow)->setFont(font);
+    }
+}
+
+void MainWindow::on_deleteButton_clicked()
+{
+    // When the delete button is clicked, check if it's the only item available
+    QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
+    foreach(QListWidgetItem * item, items)
+    {
+        delete ui->listWidget->takeItem(ui->listWidget->row(item));
+    }
+    //qDeleteAll(ui->listWidget->selectedItems());
 }
