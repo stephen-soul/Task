@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "checklistwindow.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,9 +14,12 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    checklistwindow *listWindow = new checklistwindow();
 private slots:
     void on_newPushButton_clicked();
+
+    void on_actionExitMenu_triggered();
+
+    void on_actionNew_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -6,14 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->stackedWidget->setCurrentIndex(0);
     // Set fixed size of the main menu to 750x500
     this->setFixedSize(QSize(750, 500));
-    // Set the background image
-    QPixmap bkgnd("images/logoWithText.png");
-        bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-        QPalette palette;
-        palette.setBrush(QPalette::Background, bkgnd);
-        this->setPalette(palette);
 }
 
 MainWindow::~MainWindow()
@@ -23,6 +18,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_newPushButton_clicked()
 {
-    listWindow->show();
-    this->hide();
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_actionExitMenu_triggered()
+{
+    QApplication::quit();
+}
+
+void MainWindow::on_actionNew_triggered()
+{
+    if(ui->stackedWidget->currentIndex() != 1)
+        ui->stackedWidget->setCurrentIndex(1);
 }
