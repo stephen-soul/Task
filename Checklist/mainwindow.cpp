@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Start with the save button disabled because you can't save on the main menu
     ui->actionSave->setEnabled(false);
     // If a new project is selected, do this
+
     if(!tutorialComplete) {
         // Set the list widget item 0 (the example) to be center aligned
         for(int i = 0; i < 2; i++) {
