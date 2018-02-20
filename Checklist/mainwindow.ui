@@ -145,8 +145,8 @@
      <widget class="QLabel" name="projectname">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>10</y>
+        <x>430</x>
+        <y>140</y>
         <width>111</width>
         <height>31</height>
        </rect>
@@ -155,11 +155,11 @@
        <string/>
       </property>
      </widget>
-     <widget class="QLabel" name="projectname_2">
+     <widget class="QLabel" name="projectscore">
       <property name="geometry">
        <rect>
-        <x>280</x>
-        <y>10</y>
+        <x>430</x>
+        <y>220</y>
         <width>111</width>
         <height>31</height>
        </rect>
