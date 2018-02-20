@@ -32,6 +32,8 @@ private slots:
 
     void on_deleteButton_clicked();
 
+    void on_listWidget_itemPressed(QListWidgetItem *item);
+
 private:
     Ui::MainWindow *ui;
     bool tutorialComplete;

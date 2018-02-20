@@ -48,16 +48,6 @@ void MainWindow::on_actionNewMenu_triggered() {
     // What I intend to add here is an option to 'delete' the current progress (or save) and restart
 }
 
-void MainWindow::on_listWidget_currentRowChanged(int currentRow)
-{
-    if(ui->listWidget->currentRow() >= 0) {
-        // On the current row change, get the current row and set the font to strike out like you would an actual checklist
-        QFont font;
-        font.setStrikeOut(true);
-        ui->listWidget->item(currentRow)->setFont(font);
-    }
-}
-
 void MainWindow::on_deleteButton_clicked()
 {
     // When the delete button is clicked, check if it's the only item available
@@ -67,4 +57,11 @@ void MainWindow::on_deleteButton_clicked()
         delete ui->listWidget->takeItem(ui->listWidget->row(item));
     }
     //qDeleteAll(ui->listWidget->selectedItems());
+}
+
+void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)
+{
+    QFont font;
+    font.setStrikeOut(true);
+    item->setFont(font);
 }
