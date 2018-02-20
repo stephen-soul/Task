@@ -15,8 +15,13 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedSize(QSize(750, 500));
     // Start with the save button disabled because you can't save on the main menu
     ui->actionSave->setEnabled(false);
-    // Set the list widget item 0 (the example) to be center aligned
-    ui->listWidget->item(0)->setTextAlignment(Qt::AlignHCenter);
+    // If a new project is selected, do this
+    if(!tutorialComplete) {
+        // Set the list widget item 0 (the example) to be center aligned
+        for(int i = 0; i < 2; i++) {
+            ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+        }
+    }
 }
 
 MainWindow::~MainWindow() {

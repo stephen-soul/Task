@@ -138,17 +138,7 @@
       </item>
       <item>
        <property name="text">
-        <string>New Item</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>New Item</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>New Item</string>
+        <string>I'm another example! Cross me out!</string>
        </property>
       </item>
      </widget>

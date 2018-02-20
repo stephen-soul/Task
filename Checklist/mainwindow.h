@@ -28,20 +28,13 @@ private slots:
 
     void on_listWidget_itemSelectionChanged();
 
-    void on_listWidget_itemPressed(QListWidgetItem *item);
-
-    void on_listWidget_itemActivated(QListWidgetItem *item);
-
-    void on_listWidget_itemDoubleClicked(QListWidgetItem *item);
-
     void on_listWidget_currentRowChanged(int currentRow);
-
-    void on_pushButton_2_clicked();
 
     void on_deleteButton_clicked();
 
 private:
     Ui::MainWindow *ui;
+    bool tutorialComplete;
 };
 
 #endif // MAINWINDOW_H
