@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "QRect"
 #include "QDesktopWidget"
+#include "QMessageBox"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,14 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedSize(QSize(750, 500));
     // Start with the save button disabled because you can't save on the main menu
     ui->actionSave->setEnabled(false);
-    // If a new project is selected, do this
-
-    if(!tutorialComplete) {
-        // Set the list widget item 0 (the example) to be center aligned
-        for(int i = 0; i < 2; i++) {
-            ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
-        }
-    }
 }
 
 MainWindow::~MainWindow() {
@@ -30,7 +23,23 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_newPushButton_clicked() {
-    // When the user selects new, set the current index to 1 and the save button to true
+    // When the user selects new, ask if they want a tutorial
+    QMessageBox::StandardButton tutorialChoice;
+    tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
+                                                        QMessageBox::Yes|QMessageBox::No;
+    if(tutorialChoice == QMessageBox::Yes) {
+        startTutorial = true;
+        // If a new project is selected, do this
+        // Set the list widget item 0 (the example) to be center aligned
+        ui->listWidget->addItem("I'm an example! Try me!");
+        ui->listWidget->addItem("I'm another example! Cross me out!");
+        for(int i = 0; i < 2; i++) {
+            ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+        }
+    } else {
+        startTutorial = false;
+    }
+    // Then set the current index to 1 and the save button to true
     ui->stackedWidget->setCurrentIndex(1);
     ui->actionSave->setEnabled(true);
 }
@@ -43,6 +52,21 @@ void MainWindow::on_actionExitMenu_triggered() {
 void MainWindow::on_actionNewMenu_triggered() {
     // If the new button is pressed, check if the user is not on the 'checklist' page. If they are not change it and enable the save button
     if(ui->stackedWidget->currentIndex() != 1) {
+        QMessageBox::StandardButton tutorialChoice;
+        tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
+                                                            QMessageBox::Yes|QMessageBox::No;
+        if(tutorialChoice == QMessageBox::Yes) {
+            startTutorial = true;
+            // If a new project is selected, do this
+            // Set the list widget item 0 (the example) to be center aligned
+            ui->listWidget->addItem("I'm an example! Try me!");
+            ui->listWidget->addItem("I'm another example! Cross me out!");
+            for(int i = 0; i < 2; i++) {
+                ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+            }
+        } else {
+            startTutorial = false;
+        }
         ui->stackedWidget->setCurrentIndex(1);
         ui->actionSave->setEnabled(true);
     }

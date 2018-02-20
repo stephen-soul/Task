@@ -36,7 +36,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    bool tutorialComplete;
+    bool startTutorial;
 };
 
 #endif // MAINWINDOW_H

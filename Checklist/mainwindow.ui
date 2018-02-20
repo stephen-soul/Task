@@ -125,22 +125,6 @@
       <property name="sortingEnabled">
        <bool>false</bool>
       </property>
-      <item>
-       <property name="text">
-        <string>I'm an example! Try me!</string>
-       </property>
-       <property name="font">
-        <font>
-         <strikeout>false</strikeout>
-         <kerning>true</kerning>
-        </font>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>I'm another example! Cross me out!</string>
-       </property>
-      </item>
      </widget>
      <widget class="QLabel" name="projectname">
       <property name="geometry">
@@ -261,7 +245,7 @@
     <string>Exit</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+E</string>
+    <string>Ctrl+Q</string>
    </property>
   </action>
  </widget>
