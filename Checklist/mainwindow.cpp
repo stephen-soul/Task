@@ -22,8 +22,6 @@ MainWindow::MainWindow(QWidget *parent) :
     score = 0;
     // Set the total score to 0 if nothing was loaded
     totalScore = 0;
-    // Initialize the starting fresh variable to true in case of new game;
-    startingFresh = true;
 }
 
 MainWindow::~MainWindow() {
@@ -31,15 +29,15 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_newPushButton_clicked() {
-    do {
-        ui->scoreGoesHere->setText(QString::number(score));
-        // When the user selects new, ask for a project name
-        bool ok;
-        QString text = QInputDialog::getText(this, tr("Project Name"),
-                                             tr("Project Name:"), QLineEdit::Normal,
-                                             QDir::home().dirName(), &ok);
-        if(ok && !text.isEmpty())
-            ui->projectNameGoesHere->setText(text);
+    ui->scoreGoesHere->setText(QString::number(score));
+    // When the user selects new, ask for a project  in a QInputDialog
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Project Name"),
+                                         tr("Project Name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    // If the user actually enters something, then proceed. Else do nothing
+    if(ok && !text.isEmpty()) {
+        ui->projectNameGoesHere->setText(text);
         // Then ask if they want a tutorial
         QMessageBox::StandardButton tutorialChoice;
         tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
@@ -63,7 +61,7 @@ void MainWindow::on_newPushButton_clicked() {
         ui->stackedWidget->setCurrentIndex(1);
         ui->actionSave->setEnabled(true);
         startingFresh = false;
-    } while(startingFresh);
+    }
 }
 
 void MainWindow::on_actionExitMenu_triggered() {
@@ -108,6 +106,22 @@ void MainWindow::on_deleteButton_clicked()
         ui->scoreGoesHere->setText(QString::number(score));
     }
     //qDeleteAll(ui->listWidget->selectedItems());
+}
+
+void MainWindow::on_newTaskButton_clicked()
+{
+    // When the new task button is clicked, add a task
+    bool ok;
+    QString newTask = QInputDialog::getText(this, tr("New Task Name"),
+                                         tr("Task Name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    // If the user enters a new task, add it and center it and then increment the total score
+    if(ok && !newTask.isEmpty()) {
+        ui->listWidget->addItem(newTask);
+        ui->listWidget->item(ui->listWidget->count()-1)->setTextAlignment(Qt::AlignHCenter);
+        totalScore++;
+        ui->totalScoreGoesHere->setText(QString::number(totalScore));
+    }
 }
 
 void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)

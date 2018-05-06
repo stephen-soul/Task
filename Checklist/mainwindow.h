@@ -35,6 +35,8 @@ private slots:
 
     void on_listWidget_itemPressed(QListWidgetItem *item);
 
+    void on_newTaskButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
