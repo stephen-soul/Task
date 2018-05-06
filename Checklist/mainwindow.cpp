@@ -73,6 +73,9 @@ void MainWindow::on_actionExitMenu_triggered() {
 }
 
 void MainWindow::on_actionNewMenu_triggered() {
+    ui->listWidget->clear();
+    score = 0;
+    totalScore = 0;
     ui->scoreGoesHere->setText(QString::number(score));
     ui->totalScoreGoesHere->setText(QString::number(totalScore));
     // When the user selects new, ask for a project  in a QInputDialog
@@ -156,8 +159,18 @@ void MainWindow::on_actionSave_triggered()
 {
 
     // When the user hits save we need to save the information
-    for(int i = 0; i < ui->listWidget->count(); i++) {
-        listOfItems.append(ui->listWidget->item(i)->text());
+    QMessageBox::StandardButton savingChoice;
+    savingChoice = QMessageBox::question(this, "Save Confirmation", "Are you sure you want to save?"),
+                                                        QMessageBox::Yes|QMessageBox::No;
+    if(savingChoice == QMessageBox::Yes) {
+        for(int i = 0; i < ui->listWidget->count(); i++) {
+            if(ui->listWidget->item(i)->font().strikeOut()) {
+                listOfItems.append(ui->listWidget->item(i)->text() + " - DONE");
+            } else {
+                listOfItems.append(ui->listWidget->item(i)->text());
+            }
+        }
+        file->saveFile(fileName, listOfItems);
     }
-    file->saveFile(fileName, listOfItems);
+    listOfItems.clear();
 }
