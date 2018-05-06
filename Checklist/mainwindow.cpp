@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     score = 0;
     // Set the total score to 0 if nothing was loaded
     totalScore = 0;
+    fileName = "";
 }
 
 MainWindow::~MainWindow() {
@@ -30,6 +31,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_newPushButton_clicked() {
     ui->scoreGoesHere->setText(QString::number(score));
+    ui->totalScoreGoesHere->setText(QString::number(totalScore));
     // When the user selects new, ask for a project  in a QInputDialog
     bool ok;
     QString text = QInputDialog::getText(this, tr("Project Name"),
@@ -37,6 +39,7 @@ void MainWindow::on_newPushButton_clicked() {
                                          QDir::home().dirName(), &ok);
     // If the user actually enters something, then proceed. Else do nothing
     if(ok && !text.isEmpty()) {
+        fileName = text;
         ui->projectNameGoesHere->setText(text);
         // Then ask if they want a tutorial
         QMessageBox::StandardButton tutorialChoice;
@@ -70,8 +73,17 @@ void MainWindow::on_actionExitMenu_triggered() {
 }
 
 void MainWindow::on_actionNewMenu_triggered() {
-    // If the new button is pressed, check if the user is not on the 'checklist' page. If they are not change it and enable the save button
-    if(ui->stackedWidget->currentIndex() != 1) {
+    ui->scoreGoesHere->setText(QString::number(score));
+    ui->totalScoreGoesHere->setText(QString::number(totalScore));
+    // When the user selects new, ask for a project  in a QInputDialog
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Project Name"),
+                                         tr("Project Name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    // If the user actually enters something, then proceed. Else do nothing
+    if(ok && !text.isEmpty()) {
+        ui->projectNameGoesHere->setText(text);
+        // Then ask if they want a tutorial
         QMessageBox::StandardButton tutorialChoice;
         tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
                                                             QMessageBox::Yes|QMessageBox::No;
@@ -80,17 +92,21 @@ void MainWindow::on_actionNewMenu_triggered() {
             // If a new project is selected, do this
             // Set the list widget item 0 (the example) to be center aligned
             ui->listWidget->addItem("I'm an example! Try me!");
+            totalScore++;
             ui->listWidget->addItem("I'm another example! Cross me out!");
+            totalScore++;
+            ui->totalScoreGoesHere->setText(QString::number(totalScore));
             for(int i = 0; i < 2; i++) {
                 ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
             }
         } else {
             startTutorial = false;
         }
+        // Then set the current index to 1 and the save button to true
         ui->stackedWidget->setCurrentIndex(1);
         ui->actionSave->setEnabled(true);
+        startingFresh = false;
     }
-    // What I intend to add here is an option to 'delete' the current progress (or save) and restart
 }
 
 void MainWindow::on_deleteButton_clicked()
@@ -134,4 +150,14 @@ void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)
         score++;
         ui->scoreGoesHere->setText(QString::number(score));
     }
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+
+    // When the user hits save we need to save the information
+    for(int i = 0; i < ui->listWidget->count(); i++) {
+        listOfItems.append(ui->listWidget->item(i)->text());
+    }
+    file->saveFile(fileName, listOfItems);
 }

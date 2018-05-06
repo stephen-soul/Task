@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QListWidgetItem>
+#include <QStringList>
+#include "fileio.h"
 
 namespace Ui {
 class MainWindow;
@@ -37,8 +39,11 @@ private slots:
 
     void on_newTaskButton_clicked();
 
+    void on_actionSave_triggered();
+
 private:
     Ui::MainWindow *ui;
+    FileIO *file;
 
     bool startTutorial;
 
@@ -47,6 +52,10 @@ private:
     int score;
 
     int totalScore;
+
+    QString fileName;
+
+    QVector<QString> listOfItems;
 };
 
 #endif // MAINWINDOW_H
