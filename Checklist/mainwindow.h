@@ -14,6 +14,7 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+
     ~MainWindow();
 private slots:
     void on_newPushButton_clicked();
@@ -36,7 +37,14 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
     bool startTutorial;
+
+    bool startingFresh;
+
+    int score;
+
+    int totalScore;
 };
 
 #endif // MAINWINDOW_H

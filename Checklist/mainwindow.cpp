@@ -3,6 +3,8 @@
 #include "QRect"
 #include "QDesktopWidget"
 #include "QMessageBox"
+#include "QInputDialog"
+#include "QDir"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,6 +18,12 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setFixedSize(QSize(750, 500));
     // Start with the save button disabled because you can't save on the main menu
     ui->actionSave->setEnabled(false);
+    // Set the score to 0 if nothing was loaded
+    score = 0;
+    // Set the total score to 0 if nothing was loaded
+    totalScore = 0;
+    // Initialize the starting fresh variable to true in case of new game;
+    startingFresh = true;
 }
 
 MainWindow::~MainWindow() {
@@ -23,25 +31,39 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_newPushButton_clicked() {
-    // When the user selects new, ask if they want a tutorial
-    QMessageBox::StandardButton tutorialChoice;
-    tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
-                                                        QMessageBox::Yes|QMessageBox::No;
-    if(tutorialChoice == QMessageBox::Yes) {
-        startTutorial = true;
-        // If a new project is selected, do this
-        // Set the list widget item 0 (the example) to be center aligned
-        ui->listWidget->addItem("I'm an example! Try me!");
-        ui->listWidget->addItem("I'm another example! Cross me out!");
-        for(int i = 0; i < 2; i++) {
-            ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+    do {
+        ui->scoreGoesHere->setText(QString::number(score));
+        // When the user selects new, ask for a project name
+        bool ok;
+        QString text = QInputDialog::getText(this, tr("Project Name"),
+                                             tr("Project Name:"), QLineEdit::Normal,
+                                             QDir::home().dirName(), &ok);
+        if(ok && !text.isEmpty())
+            ui->projectNameGoesHere->setText(text);
+        // Then ask if they want a tutorial
+        QMessageBox::StandardButton tutorialChoice;
+        tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
+                                                            QMessageBox::Yes|QMessageBox::No;
+        if(tutorialChoice == QMessageBox::Yes) {
+            startTutorial = true;
+            // If a new project is selected, do this
+            // Set the list widget item 0 (the example) to be center aligned
+            ui->listWidget->addItem("I'm an example! Try me!");
+            totalScore++;
+            ui->listWidget->addItem("I'm another example! Cross me out!");
+            totalScore++;
+            ui->totalScoreGoesHere->setText(QString::number(totalScore));
+            for(int i = 0; i < 2; i++) {
+                ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+            }
+        } else {
+            startTutorial = false;
         }
-    } else {
-        startTutorial = false;
-    }
-    // Then set the current index to 1 and the save button to true
-    ui->stackedWidget->setCurrentIndex(1);
-    ui->actionSave->setEnabled(true);
+        // Then set the current index to 1 and the save button to true
+        ui->stackedWidget->setCurrentIndex(1);
+        ui->actionSave->setEnabled(true);
+        startingFresh = false;
+    } while(startingFresh);
 }
 
 void MainWindow::on_actionExitMenu_triggered() {
@@ -80,13 +102,22 @@ void MainWindow::on_deleteButton_clicked()
     foreach(QListWidgetItem * item, items)
     {
         delete ui->listWidget->takeItem(ui->listWidget->row(item));
+        totalScore--;
+        ui->totalScoreGoesHere->setText(QString::number(totalScore));
+        score--;
+        ui->scoreGoesHere->setText(QString::number(score));
     }
     //qDeleteAll(ui->listWidget->selectedItems());
 }
 
 void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)
 {
-    QFont font;
-    font.setStrikeOut(true);
-    item->setFont(font);
+    // Check if an item is already striked. If not, set it and add to the score
+    if(!item->font().strikeOut()) {
+        QFont font;
+        font.setStrikeOut(true);
+        item->setFont(font);
+        score++;
+        ui->scoreGoesHere->setText(QString::number(score));
+    }
 }
