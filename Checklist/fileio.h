@@ -9,8 +9,7 @@ public:
     FileIO();
     ~FileIO();
     void saveFile(QString fileName, QVector<QString> items);
-private:
-    QVector<QString> itemList;
+    void loadFile();
 };
 
 #endif // FILEIO_H
