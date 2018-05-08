@@ -14,10 +14,13 @@ MainWindow::MainWindow(QWidget *parent) :
       position.moveCenter(QDesktopWidget().availableGeometry().center());
       move(position.topLeft());
     ui->stackedWidget->setCurrentIndex(0);
-    // Set fixed size of the main menu to 750x500
-    this->setFixedSize(QSize(750, 500));
+    // Set fixed size of the main menu to 600x500
+    this->setFixedSize(QSize(370, 430));
+    //this->setMinimumSize(600, 500);
     // Start with the save button disabled because you can't save on the main menu
     ui->actionSave->setEnabled(false);
+    ui->actionMinified->setEnabled(false);
+    ui->actionFull_View->setEnabled(false);
     // Set the score to 0 if nothing was loaded
     score = 0;
     // Set the total score to 0 if nothing was loaded
@@ -63,6 +66,8 @@ void MainWindow::on_newPushButton_clicked() {
         // Then set the current index to 1 and the save button to true
         ui->stackedWidget->setCurrentIndex(1);
         ui->actionSave->setEnabled(true);
+        ui->actionMinified->setEnabled(false);
+        ui->actionFull_View->setEnabled(true);
         startingFresh = false;
     }
 }
@@ -108,6 +113,8 @@ void MainWindow::on_actionNewMenu_triggered() {
         // Then set the current index to 1 and the save button to true
         ui->stackedWidget->setCurrentIndex(1);
         ui->actionSave->setEnabled(true);
+        ui->actionMinified->setEnabled(true);
+        ui->actionFull_View->setEnabled(true);
         startingFresh = false;
     }
 }
@@ -173,4 +180,16 @@ void MainWindow::on_actionSave_triggered()
         file->saveFile(fileName, listOfItems);
     }
     listOfItems.clear();
+}
+
+void MainWindow::on_actionMinified_triggered() {
+    this->setFixedSize(QSize(370, 430));
+    ui->actionFull_View->setEnabled(true);
+    ui->actionMinified->setEnabled(false);
+}
+
+void MainWindow::on_actionFull_View_triggered() {
+    this->setFixedSize(QSize(600, 430));
+    ui->actionMinified->setEnabled(true);
+    ui->actionFull_View->setEnabled(false);
 }

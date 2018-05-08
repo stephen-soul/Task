@@ -25,14 +25,6 @@ private slots:
 
     void on_actionNewMenu_triggered();
 
-    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
-
-    void on_listWidget_itemClicked(QListWidgetItem *item);
-
-    void on_listWidget_itemSelectionChanged();
-
-    void on_listWidget_currentRowChanged(int currentRow);
-
     void on_deleteButton_clicked();
 
     void on_listWidget_itemPressed(QListWidgetItem *item);
@@ -40,6 +32,10 @@ private slots:
     void on_newTaskButton_clicked();
 
     void on_actionSave_triggered();
+
+    void on_actionMinified_triggered();
+
+    void on_actionFull_View_triggered();
 
 private:
     Ui::MainWindow *ui;
