@@ -39,13 +39,12 @@ private slots:
 
     void on_actionLoad_triggered();
 
+    void on_loadPushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
+
     FileIO *file;
-
-    bool startTutorial;
-
-    bool startingFresh;
 
     int score;
 
@@ -54,6 +53,12 @@ private:
     QString fileName;
 
     QVector<QString> listOfItems;
+
+    void newStart();
+
+    void load();
+
+    void resizeScreen(int height, int width);
 };
 
 #endif // MAINWINDOW_H

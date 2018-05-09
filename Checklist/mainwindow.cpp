@@ -34,43 +34,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_newPushButton_clicked() {
-    ui->scoreGoesHere->setText(QString::number(score));
-    ui->totalScoreGoesHere->setText(QString::number(totalScore));
-    // When the user selects new, ask for a project  in a QInputDialog
-    bool ok;
-    QString text = QInputDialog::getText(this, tr("Project Name"),
-                                         tr("Project Name:"), QLineEdit::Normal,
-                                         QDir::home().dirName(), &ok);
-    // If the user actually enters something, then proceed. Else do nothing
-    if(ok && !text.isEmpty()) {
-        fileName = text;
-        ui->projectNameGoesHere->setText(text);
-        // Then ask if they want a tutorial
-        QMessageBox::StandardButton tutorialChoice;
-        tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
-                                                            QMessageBox::Yes|QMessageBox::No;
-        if(tutorialChoice == QMessageBox::Yes) {
-            startTutorial = true;
-            // If a new project is selected, do this
-            // Set the list widget item 0 (the example) to be center aligned
-            ui->listWidget->addItem("I'm an example! Try me!");
-            totalScore++;
-            ui->listWidget->addItem("I'm another example! Cross me out!");
-            totalScore++;
-            ui->totalScoreGoesHere->setText(QString::number(totalScore));
-            for(int i = 0; i < 2; i++) {
-                ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
-            }
-        } else {
-            startTutorial = false;
-        }
-        // Then set the current index to 1 and the save button to true
-        ui->stackedWidget->setCurrentIndex(1);
-        ui->actionSave->setEnabled(true);
-        ui->actionMinified->setEnabled(false);
-        ui->actionFull_View->setEnabled(true);
-        startingFresh = false;
-    }
+    newStart();
 }
 
 void MainWindow::on_actionExitMenu_triggered() {
@@ -79,46 +43,7 @@ void MainWindow::on_actionExitMenu_triggered() {
 }
 
 void MainWindow::on_actionNewMenu_triggered() {
-    ui->listWidget->clear();
-    score = 0;
-    totalScore = 0;
-    ui->scoreGoesHere->setText(QString::number(score));
-    ui->totalScoreGoesHere->setText(QString::number(totalScore));
-    // When the user selects new, ask for a project  in a QInputDialog
-    bool ok;
-    QString text = QInputDialog::getText(this, tr("Project Name"),
-                                         tr("Project Name:"), QLineEdit::Normal,
-                                         QDir::home().dirName(), &ok);
-    // If the user actually enters something, then proceed. Else do nothing
-    if(ok && !text.isEmpty()) {
-        ui->projectNameGoesHere->setText(text);
-        fileName = text;
-        // Then ask if they want a tutorial
-        QMessageBox::StandardButton tutorialChoice;
-        tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
-                                                            QMessageBox::Yes|QMessageBox::No;
-        if(tutorialChoice == QMessageBox::Yes) {
-            startTutorial = true;
-            // If a new project is selected, do this
-            // Set the list widget item 0 (the example) to be center aligned
-            ui->listWidget->addItem("I'm an example! Try me!");
-            totalScore++;
-            ui->listWidget->addItem("I'm another example! Cross me out!");
-            totalScore++;
-            ui->totalScoreGoesHere->setText(QString::number(totalScore));
-            for(int i = 0; i < 2; i++) {
-                ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
-            }
-        } else {
-            startTutorial = false;
-        }
-        // Then set the current index to 1 and the save button to true
-        ui->stackedWidget->setCurrentIndex(1);
-        ui->actionSave->setEnabled(true);
-        ui->actionMinified->setEnabled(true);
-        ui->actionFull_View->setEnabled(true);
-        startingFresh = false;
-    }
+    newStart();
 }
 
 void MainWindow::on_deleteButton_clicked()
@@ -185,18 +110,62 @@ void MainWindow::on_actionSave_triggered()
 }
 
 void MainWindow::on_actionMinified_triggered() {
-    this->setFixedSize(QSize(370, 430));
-    ui->actionFull_View->setEnabled(true);
-    ui->actionMinified->setEnabled(false);
+    resizeScreen(370, 430);
 }
 
 void MainWindow::on_actionFull_View_triggered() {
-    this->setFixedSize(QSize(600, 430));
-    ui->actionMinified->setEnabled(true);
-    ui->actionFull_View->setEnabled(false);
+    resizeScreen(600, 430);
 }
 
 void MainWindow::on_actionLoad_triggered() {
+    load();
+}
+
+void MainWindow::on_loadPushButton_clicked()
+{
+    load();
+}
+
+void MainWindow::newStart() {
+    ui->scoreGoesHere->setText(QString::number(score));
+    ui->totalScoreGoesHere->setText(QString::number(totalScore));
+    // When the user selects new, ask for a project name in a QInputDialog
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Project Name"),
+                                         tr("Project Name:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    // If the user actually enters something, then proceed. Else do nothing
+    if(ok && !text.isEmpty()) {
+        fileName = text;
+        ui->projectNameGoesHere->setText(text);
+        // Then ask if they want a tutorial
+        QMessageBox::StandardButton tutorialChoice;
+        tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
+                                                            QMessageBox::Yes|QMessageBox::No;
+        // If so, add some examples
+        if(tutorialChoice == QMessageBox::Yes) {
+            // If a new project is selected, do this
+            // Set the list widget item 0 (the example) to be center aligned
+            ui->listWidget->addItem("I'm an example! Try me!");
+            totalScore++;
+            ui->listWidget->addItem("I'm another example! Cross me out!");
+            totalScore++;
+            ui->totalScoreGoesHere->setText(QString::number(totalScore));
+            for(int i = 0; i < 2; i++) {
+                ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+            }
+        }
+        // Then set the current index to 1 and the save button to enabled
+        ui->stackedWidget->setCurrentIndex(1);
+        ui->actionSave->setEnabled(true);
+        ui->actionMinified->setEnabled(false);
+        ui->actionFull_View->setEnabled(true);
+        //startingFresh = false;
+    }
+}
+
+void MainWindow::load() {
+    // On load, reset scores and names and load items looking for finished tasks
     score = 0;
     totalScore = 0;
     ui->listWidget->clear();
@@ -222,6 +191,23 @@ void MainWindow::on_actionLoad_triggered() {
             ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
         }
     }
+    // Set scores
     ui->scoreGoesHere->setText(QString::number(score));
     ui->totalScoreGoesHere->setText(QString::number(totalScore));
+    // Then set the current index to 1 and the save button to enabled
+    ui->stackedWidget->setCurrentIndex(1);
+    ui->actionSave->setEnabled(true);
+    ui->actionMinified->setEnabled(false);
+    ui->actionFull_View->setEnabled(true);
+}
+
+void MainWindow::resizeScreen(int height, int width) {
+    this->setFixedSize(QSize(height, width));
+    if(ui->actionMinified->isEnabled()) {
+        ui->actionMinified->setEnabled(false);
+        ui->actionFull_View->setEnabled(true);
+    } else {
+        ui->actionMinified->setEnabled(true);
+        ui->actionFull_View->setEnabled(false);
+    }
 }
