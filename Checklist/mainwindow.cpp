@@ -11,8 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
     QRect position = frameGeometry();
-      position.moveCenter(QDesktopWidget().availableGeometry().center());
-      move(position.topLeft());
+    position.moveCenter(QDesktopWidget().availableGeometry().center());
+    move(position.topLeft());
+    MainWindow::setWindowTitle("Task");
     ui->stackedWidget->setCurrentIndex(0);
     // Set fixed size of the main menu to 600x500
     this->setFixedSize(QSize(370, 430));

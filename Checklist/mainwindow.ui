@@ -30,9 +30,9 @@
      <widget class="QPushButton" name="loadPushButton">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>343</y>
-        <width>199</width>
+        <x>78</x>
+        <y>340</y>
+        <width>211</width>
         <height>30</height>
        </rect>
       </property>
@@ -46,9 +46,9 @@
      <widget class="QPushButton" name="newPushButton">
       <property name="geometry">
        <rect>
-        <x>90</x>
-        <y>300</y>
-        <width>199</width>
+        <x>78</x>
+        <y>297</y>
+        <width>211</width>
         <height>30</height>
        </rect>
       </property>
@@ -64,7 +64,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="imageresources.qrc">:/images/newBackground2.png</pixmap>
+       <pixmap resource="imageresources.qrc">:/images/background.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>false</bool>

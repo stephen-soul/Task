@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QDir>
 #include <QDebug>
+#include <QFileDialog>
+#include <QObject>
 
 FileIO::FileIO() {
 
@@ -12,9 +14,14 @@ FileIO::~FileIO() {
 }
 
 void FileIO::saveFile(QString fileName, QVector<QString> items) {
-    QFile file(fileName + ".txt");
-    file.remove();
-    // Open the file, write the contents of the array to the file and then close
+    // Open the file dialog to let the user pick a name and save location
+    QString filter = "Text File (*.txt)";
+    QString name = QFileDialog::getSaveFileName(0,
+                                                "Save file...",
+                                                fileName+".txt",
+                                                filter);
+    QFile file(name);
+    // Then open the file in the specified location and save it
     if(file.open(QIODevice::ReadWrite | QIODevice::Truncate)) {
         QTextStream textStream(&file);
         for (int i = 0; i < items.count(); i++) {
