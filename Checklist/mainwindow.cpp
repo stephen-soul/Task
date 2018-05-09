@@ -171,34 +171,36 @@ void MainWindow::load() {
     ui->listWidget->clear();
     listOfItems.clear();
     listOfItems = file->loadFile();
-    QString passedProjectName = listOfItems.at(0);
-    passedProjectName.replace(QString(".txt"), QString(""));
-    ui->projectNameGoesHere->setText(passedProjectName);
-    listOfItems.erase(listOfItems.begin());
-    for(int i = 0; i < listOfItems.size(); i++) {
-        if(listOfItems.at(i).contains(" - DONE")) {
-            QString fixed = listOfItems.at(i);
-            fixed.replace(QString(" - DONE"), QString(""));
-            ui->listWidget->addItem(fixed);
-            QFont font;
-            font.setStrikeOut(true);
-            ui->listWidget->item(i)->setFont(font);
-            ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
-            score++;
-            totalScore++;
-        } else {
-            ui->listWidget->addItem(listOfItems.at(i));
-            ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+    if (listOfItems.at(0) != "") {
+        QString passedProjectName = listOfItems.at(0);
+        passedProjectName.replace(QString(".txt"), QString(""));
+        ui->projectNameGoesHere->setText(passedProjectName);
+        listOfItems.erase(listOfItems.begin());
+        for(int i = 0; i < listOfItems.size(); i++) {
+            if(listOfItems.at(i).contains(" - DONE")) {
+                QString fixed = listOfItems.at(i);
+                fixed.replace(QString(" - DONE"), QString(""));
+                ui->listWidget->addItem(fixed);
+                QFont font;
+                font.setStrikeOut(true);
+                ui->listWidget->item(i)->setFont(font);
+                ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+                score++;
+                totalScore++;
+            } else {
+                ui->listWidget->addItem(listOfItems.at(i));
+                ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+            }
         }
+        // Set scores
+        ui->scoreGoesHere->setText(QString::number(score));
+        ui->totalScoreGoesHere->setText(QString::number(totalScore));
+        // Then set the current index to 1 and the save button to enabled
+        ui->stackedWidget->setCurrentIndex(1);
+        ui->actionSave->setEnabled(true);
+        ui->actionMinified->setEnabled(false);
+        ui->actionFull_View->setEnabled(true);
     }
-    // Set scores
-    ui->scoreGoesHere->setText(QString::number(score));
-    ui->totalScoreGoesHere->setText(QString::number(totalScore));
-    // Then set the current index to 1 and the save button to enabled
-    ui->stackedWidget->setCurrentIndex(1);
-    ui->actionSave->setEnabled(true);
-    ui->actionMinified->setEnabled(false);
-    ui->actionFull_View->setEnabled(true);
 }
 
 void MainWindow::resizeScreen(int height, int width) {
