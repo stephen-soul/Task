@@ -33,3 +33,25 @@ void FileIO::saveFile(QString fileName, QVector<QString> items) {
         return;
     }
 }
+
+QVector<QString> FileIO::loadFile() {
+    // Add a filter and let the user open the file
+    QString filter = "Text File (*.txt)";
+    QString filename = QFileDialog::getOpenFileName(0,
+                                                    "Open File...",
+                                                    "",
+                                                    filter);
+    QVector<QString> fileContents;
+    QFile file(filename);
+    QFileInfo fileInfo(file.fileName());
+    QString returnedName(fileInfo.fileName());
+    fileContents.append(returnedName);
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream textstream(&file);
+        while(!textstream.atEnd()) {
+            fileContents.append(textstream.readLine());
+        }
+        file.close();
+    }
+    return fileContents;
+}

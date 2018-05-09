@@ -92,6 +92,7 @@ void MainWindow::on_actionNewMenu_triggered() {
     // If the user actually enters something, then proceed. Else do nothing
     if(ok && !text.isEmpty()) {
         ui->projectNameGoesHere->setText(text);
+        fileName = text;
         // Then ask if they want a tutorial
         QMessageBox::StandardButton tutorialChoice;
         tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
@@ -193,4 +194,34 @@ void MainWindow::on_actionFull_View_triggered() {
     this->setFixedSize(QSize(600, 430));
     ui->actionMinified->setEnabled(true);
     ui->actionFull_View->setEnabled(false);
+}
+
+void MainWindow::on_actionLoad_triggered() {
+    score = 0;
+    totalScore = 0;
+    ui->listWidget->clear();
+    listOfItems.clear();
+    listOfItems = file->loadFile();
+    QString passedProjectName = listOfItems.at(0);
+    passedProjectName.replace(QString(".txt"), QString(""));
+    ui->projectNameGoesHere->setText(passedProjectName);
+    listOfItems.erase(listOfItems.begin());
+    for(int i = 0; i < listOfItems.size(); i++) {
+        if(listOfItems.at(i).contains(" - DONE")) {
+            QString fixed = listOfItems.at(i);
+            fixed.replace(QString(" - DONE"), QString(""));
+            ui->listWidget->addItem(fixed);
+            QFont font;
+            font.setStrikeOut(true);
+            ui->listWidget->item(i)->setFont(font);
+            ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+            score++;
+            totalScore++;
+        } else {
+            ui->listWidget->addItem(listOfItems.at(i));
+            ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+        }
+    }
+    ui->scoreGoesHere->setText(QString::number(score));
+    ui->totalScoreGoesHere->setText(QString::number(totalScore));
 }

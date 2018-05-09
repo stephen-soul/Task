@@ -37,6 +37,8 @@ private slots:
 
     void on_actionFull_View_triggered();
 
+    void on_actionLoad_triggered();
+
 private:
     Ui::MainWindow *ui;
     FileIO *file;
