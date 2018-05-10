@@ -23,9 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionSave->setEnabled(false);
     ui->actionMinified->setEnabled(false);
     ui->actionFull_View->setEnabled(false);
-    // Set the score to 0 if nothing was loaded
     score = 0;
-    // Set the total score to 0 if nothing was loaded
     totalScore = 0;
     fileName = "";
     checkedForSave = false;
@@ -212,6 +210,7 @@ void MainWindow::load() {
 }
 
 void MainWindow::resizeScreen(int height, int width) {
+    //Resize screen for different views
     this->setFixedSize(QSize(height, width));
     if(ui->actionMinified->isEnabled()) {
         ui->actionMinified->setEnabled(false);
@@ -223,7 +222,8 @@ void MainWindow::resizeScreen(int height, int width) {
 }
 
 void MainWindow::checkUnsaved() {
-    if(!checkedForSave) {
+    // On exit make sure there's no unsaved data
+    if(!checkedForSave && listOfItems.at(0) != "") {
         QVector<QString> listContent;
         for (int i = 0; i < ui->listWidget->count(); i++) {
             if(ui->listWidget->item(i)->font().strikeOut()) {
@@ -231,7 +231,6 @@ void MainWindow::checkUnsaved() {
             } else {
                 listContent.append(ui->listWidget->item(i)->text());
             }
-            //listContent.append(ui->listWidget->item(i)->text());
         }
         if(listOfItems != listContent) {
             QMessageBox::StandardButton unsavedProject;
