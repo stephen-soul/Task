@@ -59,6 +59,11 @@ private:
     void load();
 
     void resizeScreen(int height, int width);
+
+    bool checkedForSave;
+
+public:
+    void checkUnsaved();
 };
 
 #endif // MAINWINDOW_H

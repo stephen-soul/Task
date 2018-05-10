@@ -5,6 +5,7 @@
 #include "QMessageBox"
 #include "QInputDialog"
 #include "QDir"
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Set the total score to 0 if nothing was loaded
     totalScore = 0;
     fileName = "";
+    checkedForSave = false;
 }
 
 MainWindow::~MainWindow() {
@@ -39,7 +41,7 @@ void MainWindow::on_newPushButton_clicked() {
 
 void MainWindow::on_actionExitMenu_triggered() {
     // If the user selects quit then end the program
-    QApplication::quit();
+    checkUnsaved();
 }
 
 void MainWindow::on_actionNewMenu_triggered() {
@@ -137,7 +139,7 @@ void MainWindow::newStart() {
     // If the user actually enters something, then proceed. Else do nothing
     if(ok && !text.isEmpty()) {
         fileName = text;
-        ui->projectNameGoesHere->setText(text);
+        score = 0;
         // Then ask if they want a tutorial
         QMessageBox::StandardButton tutorialChoice;
         tutorialChoice = QMessageBox::question(this, "Tutorial", "Would you like a tutorial?"),
@@ -150,11 +152,16 @@ void MainWindow::newStart() {
             totalScore++;
             ui->listWidget->addItem("I'm another example! Cross me out!");
             totalScore++;
-            ui->totalScoreGoesHere->setText(QString::number(totalScore));
             for(int i = 0; i < 2; i++) {
                 ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
             }
+        } else {
+            totalScore = 0;
+            ui->listWidget->clear();
         }
+        ui->totalScoreGoesHere->setText(QString::number(totalScore));
+        ui->projectNameGoesHere->setText(text);
+        ui->scoreGoesHere->setText(QString::number(score));
         // Then set the current index to 1 and the save button to enabled
         ui->stackedWidget->setCurrentIndex(1);
         ui->actionSave->setEnabled(true);
@@ -190,6 +197,7 @@ void MainWindow::load() {
             } else {
                 ui->listWidget->addItem(listOfItems.at(i));
                 ui->listWidget->item(i)->setTextAlignment(Qt::AlignHCenter);
+                totalScore++;
             }
         }
         // Set scores
@@ -212,4 +220,36 @@ void MainWindow::resizeScreen(int height, int width) {
         ui->actionMinified->setEnabled(true);
         ui->actionFull_View->setEnabled(false);
     }
+}
+
+void MainWindow::checkUnsaved() {
+    if(!checkedForSave) {
+        QVector<QString> listContent;
+        for (int i = 0; i < ui->listWidget->count(); i++) {
+            if(ui->listWidget->item(i)->font().strikeOut()) {
+                listContent.append(ui->listWidget->item(i)->text() + " - DONE");
+            } else {
+                listContent.append(ui->listWidget->item(i)->text());
+            }
+            //listContent.append(ui->listWidget->item(i)->text());
+        }
+        if(listOfItems != listContent) {
+            QMessageBox::StandardButton unsavedProject;
+            unsavedProject = QMessageBox::question(this, "Unsaved Progress!", "You have unsaved progress. Save?"),
+                                                                QMessageBox::Yes|QMessageBox::No;
+            // If the project isn't saved, ask the user if they want to
+            if(unsavedProject == QMessageBox::Yes) {
+                for(int i = 0; i < ui->listWidget->count(); i++) {
+                    if(ui->listWidget->item(i)->font().strikeOut()) {
+                        listOfItems.append(ui->listWidget->item(i)->text() + " - DONE");
+                    } else {
+                        listOfItems.append(ui->listWidget->item(i)->text());
+                    }
+                }
+                file->saveFile(fileName, listOfItems);
+            }
+            checkedForSave = true;
+        }
+    }
+    QApplication::quit();
 }
