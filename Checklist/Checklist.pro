@@ -37,3 +37,6 @@ FORMS += \
 
 RESOURCES += \
     imageresources.qrc
+
+DISTFILES += \
+    images/logo2.png

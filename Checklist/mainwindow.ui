@@ -11,7 +11,129 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Check List</string>
+   <string>Task</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/* Change for the menu bar */
+QMenuBar {
+	background: black;
+}
+
+QMenuBar::item {
+	color: white;
+	background: black;
+}
+
+QMenu {
+	background: black;
+	color: white;
+}
+
+QMenu::separator {
+	background: rgb(255,255,255,30);
+}
+
+QMenu::item:selected {
+    border-color: darkblue;
+    background: rgba(48, 48, 48, 150);
+}
+
+QMenu::item:disabled {
+	color: gray;
+}
+
+/* Change for the popups */
+
+QMessageBox {
+    background-color: black;
+}
+
+QMessageBox QPushButton {
+	background: rgb(48, 48, 48, 255);
+	color: white;
+}
+
+QMessageBox QLabel {
+    color: white;
+}
+
+QInputDialog {
+    background-color: black;
+}
+
+QInputDialog QLabel {
+	color: white;
+}
+
+QInputDialog QPushButton {
+	background: rgb(48, 48, 48, 255);
+	color: white;
+}
+
+/* Change for the main application */
+
+QMainWindow {
+	background: black;
+}
+
+/* Change for the list */
+
+QListWidget {
+	background: rgb(55, 55, 55, 100);
+	color: white;
+	alternate-background-color: rgb(0,0,0,0);
+}
+
+QListView::item:selected {
+    background: rgb(33, 33, 33, 255);
+	color: black;
+}
+
+QListView::item:selected:!active {
+    background: rgb(33, 33, 33, 255);
+	color: white;
+}
+
+QListView::item:selected:active {
+    background:rgb(33, 33, 33, 255);;
+	color: white;
+}
+
+QListView::item:hover {
+    background: rgb(33, 33, 33, 255);;
+	color: white;
+}
+
+QListWidget::scrollbar {
+	background: black;
+}
+/* Color for labels */
+
+QLabel {
+	color: white;
+}
+
+/* Color for buttons */
+
+QMainWindow::QPushButton {
+	background: rgb(48, 48, 48, 255);
+	color: white;
+	border-radius: 10px;
+}
+
+QMainWindow::QPushButton:pressed {
+    background-color: rgb(40, 40, 40, 255);
+    border-style: inset;
+}
+
+/* Color for tooltip */
+
+QToolTip {
+	border-color: rgb(33, 33, 33, 255);
+	background: rgb(33, 33, 33, 255);
+	color: white;
+}
+</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QStackedWidget" name="stackedWidget">
@@ -49,6 +171,18 @@ QMenu {
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load a check list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background: rgb(48, 48, 48, 255);
+	color: white;
+	border-radius: 10px;
+}
+
+QPushButton:pressed {
+    background-color: rgb(40, 40, 40, 255);
+    border-style: inset;
+}</string>
+      </property>
       <property name="text">
        <string>Open</string>
       </property>
@@ -64,6 +198,18 @@ QMenu {
       </property>
       <property name="toolTip">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Make a new check list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background: rgb(48, 48, 48, 255);
+	color: white;
+	border-radius: 10px;
+}
+
+QPushButton:pressed {
+    background-color: rgb(40, 40, 40, 255);
+    border-style: inset;
+}</string>
       </property>
       <property name="text">
        <string>New</string>
@@ -82,7 +228,7 @@ QMenu {
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap resource="imageresources.qrc">:/images/background.png</pixmap>
+       <pixmap resource="imageresources.qrc">:/images/logo2.png</pixmap>
       </property>
       <property name="scaledContents">
        <bool>false</bool>
@@ -186,6 +332,23 @@ QMenu {
         <height>30</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <strikeout>false</strikeout>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background: rgb(48, 48, 48, 255);
+	color: white;
+	border-radius: 10px;
+}
+
+QPushButton:pressed {
+    background-color: rgb(40, 40, 40, 255);
+    border-style: inset;
+}</string>
+      </property>
       <property name="text">
        <string> New Task</string>
       </property>
@@ -202,6 +365,18 @@ QMenu {
         <width>131</width>
         <height>30</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	background: rgb(48, 48, 48, 255);
+	color: white;
+	border-radius: 10px;
+}
+
+QPushButton:pressed {
+    background-color: rgb(40, 40, 40, 255);
+    border-style: inset;
+}</string>
       </property>
       <property name="text">
        <string>Delete Task</string>
@@ -346,7 +521,7 @@ QMenu {
     </rect>
    </property>
    <property name="autoFillBackground">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -356,7 +531,9 @@ QMenu {
     <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
     <addaction name="separator"/>
+    <addaction name="separator"/>
     <addaction name="actionExitMenu"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
