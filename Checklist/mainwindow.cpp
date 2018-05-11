@@ -223,31 +223,33 @@ void MainWindow::resizeScreen(int height, int width) {
 
 void MainWindow::checkUnsaved() {
     // On exit make sure there's no unsaved data
-    if(!checkedForSave && listOfItems.at(0) != "") {
-        QVector<QString> listContent;
-        for (int i = 0; i < ui->listWidget->count(); i++) {
-            if(ui->listWidget->item(i)->font().strikeOut()) {
-                listContent.append(ui->listWidget->item(i)->text() + " - DONE");
-            } else {
-                listContent.append(ui->listWidget->item(i)->text());
-            }
-        }
-        if(listOfItems != listContent) {
-            QMessageBox::StandardButton unsavedProject;
-            unsavedProject = QMessageBox::question(this, "Unsaved Progress!", "You have unsaved progress. Save?"),
-                                                                QMessageBox::Yes|QMessageBox::No;
-            // If the project isn't saved, ask the user if they want to
-            if(unsavedProject == QMessageBox::Yes) {
-                for(int i = 0; i < ui->listWidget->count(); i++) {
-                    if(ui->listWidget->item(i)->font().strikeOut()) {
-                        listOfItems.append(ui->listWidget->item(i)->text() + " - DONE");
-                    } else {
-                        listOfItems.append(ui->listWidget->item(i)->text());
-                    }
+    if(!listOfItems.empty()) {
+        if(!checkedForSave && listOfItems.at(0) != "") {
+            QVector<QString> listContent;
+            for (int i = 0; i < ui->listWidget->count(); i++) {
+                if(ui->listWidget->item(i)->font().strikeOut()) {
+                    listContent.append(ui->listWidget->item(i)->text() + " - DONE");
+                } else {
+                    listContent.append(ui->listWidget->item(i)->text());
                 }
-                file->saveFile(fileName, listOfItems);
             }
-            checkedForSave = true;
+            if(listOfItems != listContent) {
+                QMessageBox::StandardButton unsavedProject;
+                unsavedProject = QMessageBox::question(this, "Unsaved Progress!", "You have unsaved progress. Save?"),
+                                                                    QMessageBox::Yes|QMessageBox::No;
+                // If the project isn't saved, ask the user if they want to
+                if(unsavedProject == QMessageBox::Yes) {
+                    for(int i = 0; i < ui->listWidget->count(); i++) {
+                        if(ui->listWidget->item(i)->font().strikeOut()) {
+                            listOfItems.append(ui->listWidget->item(i)->text() + " - DONE");
+                        } else {
+                            listOfItems.append(ui->listWidget->item(i)->text());
+                        }
+                    }
+                    file->saveFile(fileName, listOfItems);
+                }
+                checkedForSave = true;
+            }
         }
     }
     QApplication::quit();
