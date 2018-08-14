@@ -40,7 +40,6 @@ private slots:
     void on_actionLoad_triggered();
 
     void on_loadPushButton_clicked();
-
 private:
     Ui::MainWindow *ui;
 
@@ -49,6 +48,8 @@ private:
     int score;
 
     int totalScore;
+
+    int taskNumber;
 
     QString fileName;
 
@@ -61,6 +62,11 @@ private:
     void resizeScreen(int height, int width);
 
     bool checkedForSave;
+
+    bool canDelete;
+
+    bool hasSaved;
+
 
 public:
     void checkUnsaved();

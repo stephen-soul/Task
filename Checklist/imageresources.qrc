@@ -2,5 +2,9 @@
     <qresource prefix="/">
         <file>images/background.png</file>
         <file>images/logo2.png</file>
+        <file>fonts/KirangHaerang-Regular.ttf</file>
+        <file>fonts/Jua-Regular.ttf</file>
+        <file>fonts/Rubik-Regular.ttf</file>
+        <file>fonts/Lobster-Regular.ttf</file>
     </qresource>
 </RCC>

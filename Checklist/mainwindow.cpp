@@ -6,6 +6,7 @@
 #include "QInputDialog"
 #include "QDir"
 #include <QCloseEvent>
+#include <QFontDatabase>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -19,14 +20,33 @@ MainWindow::MainWindow(QWidget *parent) :
     // Set fixed size of the main menu to 600x500
     this->setFixedSize(QSize(370, 430));
     //this->setMinimumSize(600, 500);
+    // Set the project name font
+    QFontDatabase::addApplicationFont(":/fonts/Lobster-Regular.ttf");
+    QFont projectFont = QFont("Lobster", 25, 1);
+    ui->projectNameGoesHere->setFont(projectFont);
+    // Set the ui font
+    QFontDatabase::addApplicationFont(":/fonts/Jua-Regular.ttf");
+    QFont uiFont = QFont("Jua", 15, 1);
+    ui->scoreLabel->setFont(uiFont);
+    ui->scoreGoesHere->setFont(uiFont);
+    ui->label_2->setFont(uiFont);
+    ui->label_3->setFont(uiFont);
+    ui->totalScoreGoesHere->setFont(uiFont);
+    // Set the task font
+    QFontDatabase::addApplicationFont(":/fonts/Rubik-Regular.ttf");
+    QFont taskFont = QFont("Rubik", 12, 1);
+    ui->listWidget->setFont(taskFont);
     // Start with the save button disabled because you can't save on the main menu
     ui->actionSave->setEnabled(false);
     ui->actionMinified->setEnabled(false);
     ui->actionFull_View->setEnabled(false);
     score = 0;
     totalScore = 0;
+    taskNumber = 0;
     fileName = "";
     checkedForSave = false;
+    canDelete = false;
+    hasSaved = false;
 }
 
 MainWindow::~MainWindow() {
@@ -48,15 +68,19 @@ void MainWindow::on_actionNewMenu_triggered() {
 
 void MainWindow::on_deleteButton_clicked()
 {
-    // When the delete button is clicked, check if it's the only item available
-    QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
-    foreach(QListWidgetItem * item, items)
-    {
-        delete ui->listWidget->takeItem(ui->listWidget->row(item));
-        totalScore--;
-        ui->totalScoreGoesHere->setText(QString::number(totalScore));
-        score--;
-        ui->scoreGoesHere->setText(QString::number(score));
+    if(canDelete) {
+        // When the delete button is clicked, check if it's the only item available
+        QList<QListWidgetItem*> items = ui->listWidget->selectedItems();
+        foreach(QListWidgetItem * item, items)
+        {
+            delete ui->listWidget->takeItem(ui->listWidget->row(item));
+            totalScore--;
+            ui->totalScoreGoesHere->setText(QString::number(totalScore));
+            score--;
+            ui->scoreGoesHere->setText(QString::number(score));
+        }
+        canDelete = false;
+        taskNumber--;
     }
     //qDeleteAll(ui->listWidget->selectedItems());
 }
@@ -64,17 +88,20 @@ void MainWindow::on_deleteButton_clicked()
 void MainWindow::on_newTaskButton_clicked()
 {
     // When the new task button is clicked, add a task
+    taskNumber++;
     bool ok;
     QString newTask = QInputDialog::getText(this, tr("New Task Name"),
                                          tr("Task Name:"), QLineEdit::Normal,
-                                         QDir::home().dirName(), &ok);
+                                         "My Awesome Task #" + QString::number(taskNumber), &ok);
     // If the user enters a new task, add it and center it and then increment the total score
     if(ok && !newTask.isEmpty()) {
         ui->listWidget->addItem(newTask);
         ui->listWidget->item(ui->listWidget->count()-1)->setTextAlignment(Qt::AlignHCenter);
         totalScore++;
         ui->totalScoreGoesHere->setText(QString::number(totalScore));
-    }
+        listOfItems.append(newTask);
+    } else
+        taskNumber--;
 }
 
 void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)
@@ -86,27 +113,22 @@ void MainWindow::on_listWidget_itemPressed(QListWidgetItem *item)
         item->setFont(font);
         score++;
         ui->scoreGoesHere->setText(QString::number(score));
+        canDelete = true;
     }
 }
 
 void MainWindow::on_actionSave_triggered()
 {
-
-    // When the user hits save we need to save the information
-    QMessageBox::StandardButton savingChoice;
-    savingChoice = QMessageBox::question(this, "Save Confirmation", "Are you sure you want to save?"),
-                                                        QMessageBox::Yes|QMessageBox::No;
-    if(savingChoice == QMessageBox::Yes) {
-        for(int i = 0; i < ui->listWidget->count(); i++) {
-            if(ui->listWidget->item(i)->font().strikeOut()) {
-                listOfItems.append(ui->listWidget->item(i)->text() + " - DONE");
-            } else {
-                listOfItems.append(ui->listWidget->item(i)->text());
-            }
+    for(int i = 0; i < ui->listWidget->count(); i++) {
+        if(ui->listWidget->item(i)->font().strikeOut()) {
+            listOfItems.append(ui->listWidget->item(i)->text() + " - DONE");
+        } else {
+            listOfItems.append(ui->listWidget->item(i)->text());
         }
-        file->saveFile(fileName, listOfItems);
     }
+    file->saveFile(fileName, listOfItems);
     listOfItems.clear();
+    checkedForSave = true;
 }
 
 void MainWindow::on_actionMinified_triggered() {
@@ -119,11 +141,13 @@ void MainWindow::on_actionFull_View_triggered() {
 
 void MainWindow::on_actionLoad_triggered() {
     load();
+    checkedForSave = false;
 }
 
 void MainWindow::on_loadPushButton_clicked()
 {
     load();
+    checkedForSave = false;
 }
 
 void MainWindow::newStart() {
@@ -133,7 +157,7 @@ void MainWindow::newStart() {
     bool ok;
     QString text = QInputDialog::getText(this, tr("Project Name"),
                                          tr("Project Name:"), QLineEdit::Normal,
-                                         QDir::home().dirName(), &ok);
+                                         "My Awesome Project", &ok);
     // If the user actually enters something, then proceed. Else do nothing
     if(ok && !text.isEmpty()) {
         fileName = text;
@@ -223,34 +247,31 @@ void MainWindow::resizeScreen(int height, int width) {
 
 void MainWindow::checkUnsaved() {
     // On exit make sure there's no unsaved data
-    if(!listOfItems.empty()) {
-        if(!checkedForSave && listOfItems.at(0) != "") {
-            QVector<QString> listContent;
-            for (int i = 0; i < ui->listWidget->count(); i++) {
-                if(ui->listWidget->item(i)->font().strikeOut()) {
-                    listContent.append(ui->listWidget->item(i)->text() + " - DONE");
-                } else {
-                    listContent.append(ui->listWidget->item(i)->text());
-                }
-            }
-            if(listOfItems != listContent) {
-                QMessageBox::StandardButton unsavedProject;
-                unsavedProject = QMessageBox::question(this, "Unsaved Progress!", "You have unsaved progress. Save?"),
-                                                                    QMessageBox::Yes|QMessageBox::No;
-                // If the project isn't saved, ask the user if they want to
-                if(unsavedProject == QMessageBox::Yes) {
-                    for(int i = 0; i < ui->listWidget->count(); i++) {
-                        if(ui->listWidget->item(i)->font().strikeOut()) {
-                            listOfItems.append(ui->listWidget->item(i)->text() + " - DONE");
-                        } else {
-                            listOfItems.append(ui->listWidget->item(i)->text());
-                        }
-                    }
-                    file->saveFile(fileName, listOfItems);
-                }
-                checkedForSave = true;
-            }
+    QVector<QString> listContent;
+    for (int i = 0; i < ui->listWidget->count(); i++) {
+        if(ui->listWidget->item(i)->font().strikeOut()) {
+            listContent.append(ui->listWidget->item(i)->text() + " - DONE");
+        } else {
+            listContent.append(ui->listWidget->item(i)->text());
         }
     }
+    if(listOfItems != listContent) {
+        QMessageBox::StandardButton unsavedProject;
+        unsavedProject = QMessageBox::question(this, "Unsaved Progress!", "You have unsaved progress. Save?"),
+                                                            QMessageBox::Yes|QMessageBox::No;
+        // If the project isn't saved, ask the user if they want to
+        if(unsavedProject == QMessageBox::Yes) {
+            for(int i = 0; i < ui->listWidget->count(); i++) {
+                if(ui->listWidget->item(i)->font().strikeOut()) {
+                    listOfItems.append(ui->listWidget->item(i)->text() + " - DONE");
+                } else {
+                    listOfItems.append(ui->listWidget->item(i)->text());
+                }
+            }
+            file->saveFile(fileName, listOfItems);
+        }
+        checkedForSave = true;
+    }
+    // Otherwise just exit the program
     QApplication::quit();
 }
