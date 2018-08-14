@@ -264,7 +264,8 @@ QPushButton:pressed {
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click on an item to cross it out!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">QToolTip { color: #fff; background-color: #000; border: none; }
+</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -517,7 +518,7 @@ QPushButton:pressed {
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="autoFillBackground">

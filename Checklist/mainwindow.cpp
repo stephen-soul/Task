@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QFontDatabase::addApplicationFont(":/fonts/Rubik-Regular.ttf");
     QFont taskFont = QFont("Rubik", 12, 1);
     ui->listWidget->setFont(taskFont);
+
     // Start with the save button disabled because you can't save on the main menu
     ui->actionSave->setEnabled(false);
     ui->actionMinified->setEnabled(false);
@@ -59,7 +60,7 @@ void MainWindow::on_newPushButton_clicked() {
 
 void MainWindow::on_actionExitMenu_triggered() {
     // If the user selects quit then end the program
-    checkUnsaved();
+    close();
 }
 
 void MainWindow::on_actionNewMenu_triggered() {
